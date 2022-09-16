@@ -17,7 +17,10 @@ import adodbapi
 
 # MsSql
 conStr = "PROVIDER=SQLOLEDB;Data Source={0};Database={1}; \
-       UID={2};PWD={3};".format("192.168.1.66","Exchange","exchange","exchange1")
+       UID={2};PWD={3};".format("192.168.1.69","Exchange","exchange","exchange1")
+
+conStr_ETH = "PROVIDER=SQLOLEDB;Data Source={0};Database={1}; \
+       UID={2};PWD={3};".format("192.168.1.69","ETH_API","exchange","exchange1")
 
 web3 = Web3()
 conectWeb = web3.isConnected()
@@ -93,6 +96,9 @@ def insertion(blockid, tr, IncomeWallets):
                 try:
                     conn_MSSQL = adodbapi.connect(conStr)
                     cursor_MSSQL = conn_MSSQL.cursor()
+                    
+                    conn_MSSQL_ETH = adodbapi.connect(conStr_ETH)
+                    cursor_MSSQL_ETH = conn_MSSQL_ETH.cursor()
                 except:
                     logger.error("Unable to connect to database MsSql")
 
@@ -104,6 +110,11 @@ def insertion(blockid, tr, IncomeWallets):
                 conn_MSSQL.commit()
                 cursor_MSSQL.close()
                 conn_MSSQL.close()
+
+                zz = cursor_MSSQL_ETH.callproc("UpdateValueAccountByAddress", (to, v))
+                conn_MSSQL_ETH.commit()
+                cursor_MSSQL_ETH.close()
+                conn_MSSQL_ETH.close()
         except BaseException as x: 
             continue
 while True:
