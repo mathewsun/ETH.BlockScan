@@ -153,7 +153,7 @@ while True:
         
         
     except:
-        logger.error("block does not exist")
+        logger.error('block ' + str(block) + ' does not exist')
 
     time.sleep(int(pollingPeriod))
 
